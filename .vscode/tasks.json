@@ -1,0 +1,315 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "make",
+      "command": "/bin/bash",
+      "args": [
+        "-c",
+        "mkdir -p ./bin && rm -f ./bin/* && cp ./input.data \"./program0/bin/$(cat ./program0/projectName)\" \"./program1/bin/$(cat ./program1/projectName)\" \"./program2/bin/$(cat ./program2/projectName)\" \"./program3/bin/$(cat ./program3/projectName)\" ./bin"
+      ],
+      "problemMatcher": [],
+      "dependsOn": [
+        "Program 0: make",
+        "Program 1: make",
+        "Program 2: make",
+        "Program 3: make"
+      ]
+    },
+    {
+      "label": "make debug",
+      "command": "/bin/bash",
+      "args": [
+        "-c",
+        "mkdir -p ./bin && rm -f ./bin/* && cp ./input.data \"./program0/bin/$(cat ./program0/projectName)\" \"./program1/bin/$(cat ./program1/projectName)\" \"./program2/bin/$(cat ./program2/projectName)\" \"./program3/bin/$(cat ./program3/projectName)\" ./bin"
+      ],
+      "problemMatcher": [],
+      "dependsOn": [
+        "Program 0: make debug",
+        "Program 1: make debug",
+        "Program 2: make debug",
+        "Program 3: make debug"
+      ]
+    },
+
+    {
+      "label": "Program 0: make",
+      "command": "/usr/bin/make",
+      "options": {
+        "cwd": "${workspaceFolder}/program0"
+      },
+      "problemMatcher": "$gcc",
+      "dependsOn": [
+        "Program 0: make clean"
+      ]
+    },
+    {
+      "label": "Program 0: make debug",
+      "command": "/usr/bin/make",
+      "args": [
+        "debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program0"
+      },
+      "problemMatcher": "$gcc",
+      "dependsOn": [
+        "Program 0: make clean"
+      ]
+    },
+    {
+      "label": "Program 0: make dist",
+      "command": "/usr/bin/make",
+      "args": [
+        "dist"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program0"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Program 0: make submit",
+      "command": "/usr/bin/make",
+      "args": [
+        "submit"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program0"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Program 0: make clean",
+      "command": "/usr/bin/make",
+      "args": [
+        "clean"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program0"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Program 0: make cleandist",
+      "command": "/usr/bin/make",
+      "args": [
+        "cleandist"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program0"
+      },
+      "problemMatcher": []
+    },
+
+    {
+      "label": "Program 1: make",
+      "command": "/usr/bin/make",
+      "options": {
+        "cwd": "${workspaceFolder}/program1"
+      },
+      "problemMatcher": "$gcc",
+      "dependsOn": [
+        "Program 1: make clean"
+      ]
+    },
+    {
+      "label": "Program 1: make debug",
+      "command": "/usr/bin/make",
+      "args": [
+        "debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program1"
+      },
+      "problemMatcher": "$gcc",
+      "dependsOn": [
+        "Program 1: make clean"
+      ]
+    },
+    {
+      "label": "Program 1: make dist",
+      "command": "/usr/bin/make",
+      "args": [
+        "dist"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program1"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Program 1: make submit",
+      "command": "/usr/bin/make",
+      "args": [
+        "submit"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program1"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Program 1: make clean",
+      "command": "/usr/bin/make",
+      "args": [
+        "clean"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program1"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Program 1: make cleandist",
+      "command": "/usr/bin/make",
+      "args": [
+        "cleandist"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program1"
+      },
+      "problemMatcher": []
+    },
+
+    {
+      "label": "Program 2: make",
+      "command": "/usr/bin/make",
+      "options": {
+        "cwd": "${workspaceFolder}/program2"
+      },
+      "problemMatcher": "$gcc",
+      "dependsOn": [
+        "Program 2: make clean"
+      ]
+    },
+    {
+      "label": "Program 2: make debug",
+      "command": "/usr/bin/make",
+      "args": [
+        "debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program2"
+      },
+      "problemMatcher": "$gcc",
+      "dependsOn": [
+        "Program 2: make clean"
+      ]
+    },
+    {
+      "label": "Program 2: make dist",
+      "command": "/usr/bin/make",
+      "args": [
+        "dist"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program2"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Program 2: make submit",
+      "command": "/usr/bin/make",
+      "args": [
+        "submit"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program2"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Program 2: make clean",
+      "command": "/usr/bin/make",
+      "args": [
+        "clean"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program2"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Program 2: make cleandist",
+      "command": "/usr/bin/make",
+      "args": [
+        "cleandist"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program2"
+      },
+      "problemMatcher": []
+    },
+
+    {
+      "label": "Program 3: make",
+      "command": "/usr/bin/make",
+      "options": {
+        "cwd": "${workspaceFolder}/program3"
+      },
+      "problemMatcher": "$gcc",
+      "dependsOn": [
+        "Program 3: make clean"
+      ]
+    },
+    {
+      "label": "Program 3: make debug",
+      "command": "/usr/bin/make",
+      "args": [
+        "debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program3"
+      },
+      "problemMatcher": "$gcc",
+      "dependsOn": [
+        "Program 3: make clean"
+      ]
+    },
+    {
+      "label": "Program 3: make dist",
+      "command": "/usr/bin/make",
+      "args": [
+        "dist"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program3"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Program 3: make submit",
+      "command": "/usr/bin/make",
+      "args": [
+        "submit"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program3"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Program 3: make clean",
+      "command": "/usr/bin/make",
+      "args": [
+        "clean"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program3"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Program 3: make cleandist",
+      "command": "/usr/bin/make",
+      "args": [
+        "cleandist"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/program3"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
