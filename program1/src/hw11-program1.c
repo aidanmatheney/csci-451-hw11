@@ -15,17 +15,17 @@
  */
 void hw11Program1(
     char const * const inputFilePath,
-    char const * const semaphoreName,
-    int const pipe1WriteFileDescriptor
+    int const pipe1WriteFileDescriptor,
+    char const * const semaphore1Name
 ) {
     guardNotNull(inputFilePath, "inputFilePath", "hw11Program1");
-    guardNotNull(semaphoreName, "semaphoreName", "hw11Program1");
+    guardNotNull(semaphore1Name, "semaphore1Name", "hw11Program1");
 
     FILE * const inputFile = safeFopen(inputFilePath, "r", "hw11Program1");
-    sem_t * const semaphore = safeSemOpen(semaphoreName, "hw11Program1");
     FILE * const pipe1WriteFile = safeFdopen(pipe1WriteFileDescriptor, "w", "hw11Program1");
+    sem_t * const semaphore1 = safeSemOpen(semaphore1Name, "hw11Program1");
 
-    // The semaphore is already locked
+    // semaphore1 is already locked
 
     while (true) {
         StringBuilder const currentWordBuilder = StringBuilder_create();
@@ -63,9 +63,8 @@ void hw11Program1(
         safeFprintf(pipe1WriteFile, "hw11Program1", "%s\n", currentWord);
         free(currentWord);
     }
-
     safeFprintf(pipe1WriteFile, "hw11Program1", "\n");
-    safeSemPost(semaphore, "hw11Program1");
+    safeSemPost(semaphore1, "hw11Program1");
 
     fclose(inputFile);
     fclose(pipe1WriteFile);

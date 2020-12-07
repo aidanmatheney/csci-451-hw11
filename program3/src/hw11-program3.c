@@ -1,44 +1,39 @@
 #include "../include/hw11-program3.h"
 
 #include "../include/util/file.h"
+#include "../include/util/semaphore.h"
+#include "../include/util/shared-memory.h"
 #include "../include/util/guard.h"
 
 #include <stdlib.h>
+#include <sys/types.h>
 #include <stdio.h>
+#include <semaphore.h>
+
+struct Hw11WordCounts {
+    unsigned int type1;
+    unsigned int type2;
+};
 
 /**
  * Run CSCI 451 HW11 program 3.
  */
 void hw11Program3(
-    char const * const type1WordCountInputFilePath,
-    char const * const type2WordCountInputFilePath,
     char const * const outputFilePath,
-    int const pipe2ReadFileDescriptor
+    int const pipe2ReadFileDescriptor,
+    char const * const semaphore2Name,
+    key_t const sharedMemoryKey
 ) {
-    guardNotNull(type1WordCountInputFilePath, "type1WordCountInputFilePath", "hw11Program3");
-    guardNotNull(type2WordCountInputFilePath, "type2WordCountInputFilePath", "hw11Program3");
     guardNotNull(outputFilePath, "outputFilePath", "hw11Program3");
+    guardNotNull(semaphore2Name, "semaphore2Name", "hw11Program3");
 
-    FILE * const type1WordCountInputFile = safeFopen(type1WordCountInputFilePath, "r", "hw11Program3");
-    FILE * const type2WordCountInputFile = safeFopen(type2WordCountInputFilePath, "r", "hw11Program3");
-
-    char * const type1WordCountString = readFileLine(type1WordCountInputFile);
-    char * const type2WordCountString = readFileLine(type2WordCountInputFile);
-
-    unsigned int const type1WordCount = (unsigned int)strtoul(type1WordCountString, NULL, 10);
-    unsigned int const type2WordCount = (unsigned int)strtoul(type2WordCountString, NULL, 10);
-
-    free(type1WordCountString);
-    free(type2WordCountString);
-
-    fclose(type1WordCountInputFile);
-    fclose(type2WordCountInputFile);
-
-    printf("Type 1: %u\nType 2: %u\n", type1WordCount, type2WordCount);
-
-    FILE * const pipe2ReadFile = safeFdopen(pipe2ReadFileDescriptor, "r", "hw11Program1");
     FILE * const outputFile = safeFopen(outputFilePath, "w", "hw11Program3");
+    FILE * const pipe2ReadFile = safeFdopen(pipe2ReadFileDescriptor, "r", "hw11Program3");
+    sem_t * const semaphore2 = safeSemOpen(semaphore2Name, "hw11Program3");
+    int const sharedMemoryId = safeOpenSharedMemory(sharedMemoryKey, sizeof (struct Hw11WordCounts), "hw11Program3");
+    struct Hw11WordCounts * const wordCounts = safeAttachSharedMemory(sharedMemoryId, "hw11Program3");
 
+    safeSemWait(semaphore2, "hw11Program3");
     bool wroteFirstWord = false;
     while (true) {
         char * const currentPigLatinWord = readFileLine(pipe2ReadFile);
@@ -60,6 +55,8 @@ void hw11Program3(
 
         free(currentPigLatinWord);
     }
+    printf("Type 1: %u\nType 2: %u\n", wordCounts->type1, wordCounts->type2);
+    safeSemPost(semaphore2, "hw11Program3");
 
     safeFprintf(outputFile, "hw11Program3", "\n");
 

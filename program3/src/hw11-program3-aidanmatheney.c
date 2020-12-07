@@ -8,23 +8,28 @@
 #include "../include/hw11-program3.h"
 
 #include <stdlib.h>
+#include <sys/types.h>
 #include <stdio.h>
 
 int main(int const argc, char ** const argv) {
-    if (argc != 2) {
-        fprintf(stderr, "Error: expected 1 argument, got %d\n", argc - 1);
+    if (argc != 5) {
+        fprintf(stderr, "Error: expected 4 argument, got %d\n", argc - 1);
         return EXIT_FAILURE;
     }
 
-    char * const pipe2ReadFileDescriptorString = argv[1];
+    char * const outputFilePath = argv[1];
+    char * const pipe2ReadFileDescriptorString = argv[2];
+    char * const semaphore2Name = argv[3];
+    char * const sharedMemoryKeyString = argv[4];
 
     int pipe2ReadFileDescriptor = (int)strtol(pipe2ReadFileDescriptorString, NULL, 10);
+    key_t sharedMemoryKey = (int)strtol(sharedMemoryKeyString, NULL, 10);
 
     hw11Program3(
-        "./shared1.dat",
-        "./shared2.dat",
-        "./output.data",
-        pipe2ReadFileDescriptor
+        outputFilePath,
+        pipe2ReadFileDescriptor,
+        semaphore2Name,
+        sharedMemoryKey
     );
     return EXIT_SUCCESS;
 }

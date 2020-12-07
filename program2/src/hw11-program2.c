@@ -4,35 +4,44 @@
 
 #include "../include/util/file.h"
 #include "../include/util/semaphore.h"
+#include "../include/util/shared-memory.h"
 #include "../include/util/guard.h"
 
 #include <stdlib.h>
 #include <ctype.h>
+#include <sys/types.h>
 #include <stdio.h>
 #include <semaphore.h>
+
+struct Hw11WordCounts {
+    unsigned int type1;
+    unsigned int type2;
+};
 
 /**
  * Run CSCI 451 HW11 program 2.
  */
 void hw11Program2(
-    char const * const type1WordCountOutputFilePath,
-    char const * const type2WordCountOutputFilePath,
-    char const * const semaphoreName,
     int const pipe1ReadFileDescriptor,
-    int const pipe2WriteFileDescriptor
+    int const pipe2WriteFileDescriptor,
+    char const * const semaphore1Name,
+    char const * const semaphore2Name,
+    key_t const sharedMemoryKey
 ) {
-    guardNotNull(type1WordCountOutputFilePath, "type1WordCountOutputFilePath", "hw11Program2");
-    guardNotNull(type2WordCountOutputFilePath, "type2WordCountOutputFilePath", "hw11Program2");
-    guardNotNull(semaphoreName, "semaphoreName", "hw11Program2");
+    guardNotNull(semaphore1Name, "semaphore1Name", "hw11Program2");
+    guardNotNull(semaphore2Name, "semaphore2Name", "hw11Program2");
 
-    sem_t * const semaphore = safeSemOpen(semaphoreName, "hw11Program1");
-    FILE * const pipe1ReadFile = safeFdopen(pipe1ReadFileDescriptor, "r", "hw11Program1");
-    FILE * const pipe2WriteFile = safeFdopen(pipe2WriteFileDescriptor, "w", "hw11Program1");
+    FILE * const pipe1ReadFile = safeFdopen(pipe1ReadFileDescriptor, "r", "hw11Program2");
+    FILE * const pipe2WriteFile = safeFdopen(pipe2WriteFileDescriptor, "w", "hw11Program2");
+    sem_t * const semaphore1 = safeSemOpen(semaphore1Name, "hw11Program2");
+    sem_t * const semaphore2 = safeSemOpen(semaphore2Name, "hw11Program2");
+    int const sharedMemoryId = safeOpenSharedMemory(sharedMemoryKey, sizeof (struct Hw11WordCounts), "hw11Program2");
+    struct Hw11WordCounts * const wordCounts = safeAttachSharedMemory(sharedMemoryId, "hw11Program2");
 
     unsigned int type1WordCount = 0;
     unsigned int type2WordCount = 0;
 
-    safeSemWait(semaphore, "hw11Program2");
+    safeSemWait(semaphore1, "hw11Program2");
     while (true) {
         char * const currentWord = readFileLine(pipe1ReadFile);
         if (currentWord == NULL) {
@@ -81,19 +90,17 @@ void hw11Program2(
 
         free(currentWord);
     }
-    safeSemPost(semaphore, "hw11Program2");
+    safeSemPost(semaphore1, "hw11Program2");
 
     safeFprintf(pipe2WriteFile, "hw11Program2", "\n");
+    *wordCounts = (struct Hw11WordCounts){
+        .type1 = type1WordCount,
+        .type2 = type2WordCount
+    };
+    safeSemPost(semaphore2, "hw11Program2");
 
     fclose(pipe1ReadFile);
     fclose(pipe2WriteFile);
 
-    FILE * const type1WordCountOutputFile = safeFopen(type1WordCountOutputFilePath, "w", "hw11Program2");
-    FILE * const type2WordCountOutputFile = safeFopen(type2WordCountOutputFilePath, "w", "hw11Program2");
-
-    safeFprintf(type1WordCountOutputFile, "hw11Program2", "%u\n", type1WordCount);
-    safeFprintf(type2WordCountOutputFile, "hw11Program2", "%u\n", type2WordCount);
-
-    fclose(type1WordCountOutputFile);
-    fclose(type2WordCountOutputFile);
+    safeDetatchSharedMemory(wordCounts, "hw11Program2");
 }

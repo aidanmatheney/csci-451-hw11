@@ -2,6 +2,6 @@
 
 void hw11Program1(
     char const *inputFilePath,
-    char const *semaphoreName,
-    int pipe1WriteFileDescriptor
+    int pipe1WriteFileDescriptor,
+    char const *semaphore1Name
 );

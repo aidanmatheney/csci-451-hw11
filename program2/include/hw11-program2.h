@@ -1,9 +1,11 @@
 #pragma once
 
+#include <sys/types.h>
+
 void hw11Program2(
-    char const *type1WordCountOutputFilePath,
-    char const *type2WordCountOutputFilePath,
-    char const *semaphoreName,
     int pipe1ReadFileDescriptor,
-    int pipe2WriteFileDescriptor
+    int pipe2WriteFileDescriptor,
+    char const *semaphore1Name,
+    char const *semaphore2Name,
+    key_t sharedMemoryKey
 );
